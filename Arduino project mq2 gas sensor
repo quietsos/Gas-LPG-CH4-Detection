@@ -1,0 +1,44 @@
+#include<LiquidCrystal.h>                                //libarary for liquidcrystal display
+const int rs=12,en=11,d4=5,d5=4,d6=3,d7=2;               //pin for LCD to arduino
+LiquidCrystal lcd(rs,en,d4,d5,d6,d7);                   //define pin for LCD display
+
+int gas_sensor=A5;                                      //pin for mq2 gas sensors
+int buzzer=8;                                           //pin for buzzer module
+int analog_sensorValue;                                      //varibale for storing analog value of mq2 gas sensors
+int smokeThread =360;                                   //minimum value for gas likadge 
+void setup() 
+{
+  // put your setup code here, to run once:
+  pinMode(A5,INPUT);                                    //pinMode for mq2 gas sensors
+  pinMode(8,OUTPUT);                                    //pinmode for buzzer module
+
+  lcd.begin(40,2);                                      //lcd begining command
+  lcd.print(" ICT_Innovation_Lab ");                    // printing in lcd display
+  Serial.begin(9600);                                   // serial port start delay
+
+}
+
+void loop()
+
+{
+  // put your main code here, to run repeatedly:
+  lcd.setCursor(0,1);
+  
+  analog_sensorValue= analogRead(A5);                   //storing sensors analog value in declared variable
+  
+  if(analog_sensorValue > smokeThread)
+  {
+    digitalWrite(8,HIGH);                              //buzzer high
+    lcd.print(" Danger...");
+    Serial.print("Danger detect: ");
+    Serial.println(analog_sensorValue);
+  }
+  else
+  {
+    digitalWrite(8,LOW);                             //buzzer low
+    lcd.print(" Safe...");
+    Serial.print("Safe: ");
+    Serial.println(analog_sensorValue);
+  }
+  delay(550);
+}
